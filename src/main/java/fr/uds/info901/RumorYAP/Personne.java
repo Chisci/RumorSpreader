@@ -2,13 +2,14 @@ package fr.uds.info901.RumorYAP;
 
 import java.util.ArrayList;
 import java.lang.Math;
+import org.graphstream.graph.*;
 
 public class Personne {
 	
 
-	String name;
+	private String name;
 	ArrayList<Personne> amis;
-	int rumorSpreader;
+	private int rumorSpreader;
 	
 	public Personne(){
 		amis = new ArrayList<Personne>();
@@ -25,14 +26,14 @@ public class Personne {
 	{
 		this.amis.add(ami);
 	}
-	public void Spread()
+	public void spread()
 	{
 			if (this.rumorSpreader>Math.random()*100)
 			{
 				for (Personne personne : amis) {
 					if (personne.getRumor()==0)
 					{
-					personne.setRumor(Math.random()*100);
+					personne.setRumor(100-(Math.random()*200));
 					}
 				}
 			}
@@ -56,6 +57,12 @@ public class Personne {
 	public int getRumor()
 	{
 		return this.rumorSpreader;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -2,6 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+
   <groupId>fr.uds.info901</groupId>
   <artifactId>RumorYAP</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -21,5 +22,17 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+<dependency>
+<groupId>org.graphstream</groupId>
+<artifactId>gs-core</artifactId>
+<version>[1.2,1.3)</version>
+<optional>false</optional>
+</dependency>
+<dependency>
+<groupId>org.graphstream</groupId>
+<artifactId>gs-algo</artifactId>
+<version>[1.2,1.3)</version>
+<optional>false</optional>
+</dependency>
   </dependencies>
 </project>
