@@ -1,12 +1,13 @@
 package fr.uds.info901.RumorYAP;
 
 import java.util.ArrayList;
-import java.lang.Math;
-import org.graphstream.graph.*;
+import java.util.Set;
+
+import fr.uds.info901.RumorYAP.rumor.Rumor;
 
 public class Personne {
 	
-
+	private Set<Rumor> rumors;
 	private String name;
 	ArrayList<Personne> amis;
 	private int rumorSpreader;
@@ -31,10 +32,7 @@ public class Personne {
 			if (this.rumorSpreader>Math.random()*100)
 			{
 				for (Personne personne : amis) {
-					if (personne.getRumor()==0)
-					{
-					personne.setRumor(100-(Math.random()*200));
-					}
+					personne.hearRumor();
 				}
 			}
 			else
@@ -42,13 +40,14 @@ public class Personne {
 				if (this.getRumor()<0)
 				{
 					for (Personne personne : amis) {
-						if (personne.getRumor()==0)
-						{
-						personne.setRumor(100-(Math.random()*100));
-						}
+						personne.hearRumor();
 					}
 				}
 			}
+	}
+	public void hearRumor(){
+		if(this.getRumor()==0)
+			setRumor(100-(Math.random()*200));
 	}
 	public void setRumor(double degree)
 	{
