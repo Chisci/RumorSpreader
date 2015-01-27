@@ -63,5 +63,9 @@ public class Personne {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public boolean isFriendWith(Personne personne){
+		return this.amis.contains(personne);
+	}
 
 }
