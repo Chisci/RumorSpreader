@@ -2,9 +2,12 @@ package fr.uds.info901.rumoryap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+
+import fr.uds.info901.rumoryap.rumor.BelieverActivist;
 
 public class Main {
 	private static final int NB_PERSONNE = 50;
@@ -33,57 +36,74 @@ public class Main {
 		
 		return network;
 	}
+	
+	private static String createEdgeName(Personne p1, Personne p2){
+		if(p1.getName()>p2.getName()){
+			return p1+SEPARATOR+p2;
+		}
+		return p2+SEPARATOR+p1;
+	}
+	
+	public static void updateGraph(Graph graph, List<Personne> network){
+		for (Personne personne : network) {
+			graph.getNode(personne.getName()+"").setAttribute(STYLE, personne.getColorInGraph());
+			if(personne.isInfected())
+			{
+				for(SocialLink socialLink : personne.getFriendList())
+				{
+					Personne friendPersonne = socialLink.getFriend();
+					if(friendPersonne.isInfected())
+					{
+						if(graph.getEdge(createEdgeName(personne,friendPersonne))!=null)
+						{
+							graph.getEdge(createEdgeName(personne,friendPersonne)).setAttribute(STYLE, "fill-color: rgb(255,0,0);");
+						}
+					}
+					else
+					{
+						if (createEdgeName(personne,friendPersonne)!=null)
+						{
+							graph.getEdge(createEdgeName(personne,friendPersonne)).setAttribute(STYLE, "fill-color: rgb(0,255,0);");
+						}
+					}
+				}
+			}	
+		}
+	}
+	
 	public static void main(String[] args){
 		List<Personne> network = Main.getInitialGraph();
 		Graph graph = new SingleGraph("Rumor");
     	
 		for(Personne personne : network){
-			graph.addNode(personne.getName()).setAttribute(STYLE, personne.getColorInGraph());;
+			graph.addNode(personne.getName()+"").setAttribute(STYLE, personne.getColorInGraph());;
 		}
 		for(Personne personne : network){
 			for(SocialLink socialLink : personne.getFriendList()){
 				Personne friendPersonne = socialLink.getFriend();
-				if((graph.getEdge(personne.getName()+SEPARATOR+friendPersonne.getName())==null)&&(graph.getEdge(friendPersonne.getName()+SEPARATOR+personne.getName())==null)){
-					graph.addEdge(personne.getName()+SEPARATOR+friendPersonne.getName(),personne.getName(),friendPersonne.getName());
+				if(graph.getEdge(createEdgeName(personne,friendPersonne))==null){
+					graph.addEdge(createEdgeName(personne,friendPersonne),personne.getName()+"",friendPersonne.getName()+"");
 				}
 			}
 		}
+
+		graph.display();
 		
-		for (Personne personne : network) {
-			graph.getNode(personne.getName()).setAttribute(STYLE, personne.getColorInGraph());
-			if(personne.isInfected())
-			{
-				for(SocialLink socialLink : personne.getFriendList())
-				{
-					Personne friend = socialLink.getFriend();
-					if(friend.isInfected())
-					{
-						if(graph.getEdge(personne.getName()+friend.getName())!=null)
-						{
-							graph.getEdge(personne.getName()+friend.getName()).setAttribute(STYLE, "fill-color: rgb(255,0,0);");
-						}
-						else
-						{
-							graph.getEdge(friend.getName()+personne.getName()).setAttribute(STYLE, "fill-color: rgb(255,0,0);");
-						}
-					}
-					else
-					{
-						if (graph.getEdge(personne.getName()+friend.getName())!=null)
-						{
-							graph.getEdge(personne.getName()+friend.getName()).setAttribute(STYLE, "fill-color: rgb(0,255,0);");
-						}
-						else
-						{
-							graph.getEdge(friend.getName()+personne.getName()).setAttribute(STYLE, "fill-color: rgb(0,255,0);");
-						}
-					}
-				}
+		network.get(0).getRumor().setRumorState(new BelieverActivist());
+		network.get(0).spread();
+		
+		Scanner scanner = new Scanner(System.in);
+		String line = scanner.nextLine();
+		while(!line.contains("exit")){
+			
+			for(Personne personne : network){
+				personne.spread();
 			}
 			
+			updateGraph(graph, network);
+			line = scanner.nextLine();
 		}
-		
-		graph.display();
+		scanner.close();
 	}
 }
 

@@ -6,7 +6,11 @@ import fr.uds.info901.rumoryap.SocialLink;
 
 public class Rumor {
 	private AbstractRumorState rumorState;
-	private double credibility;
+	private double credibility = Math.random();
+	/**
+	 * Daily propagation rate in percentage
+	 */
+	private double propagationRate = Math.random();
 
 	public AbstractRumorState getRumorState() {
 		return rumorState;
@@ -26,5 +30,13 @@ public class Rumor {
 	
 	public void spread(List<SocialLink> friendList){
 		this.rumorState.spread(friendList);
+	}
+
+	public double getPropagationRate() {
+		return propagationRate;
+	}
+
+	public void setPropagationRate(double propagationRate) {
+		this.propagationRate = propagationRate;
 	}
 }
