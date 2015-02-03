@@ -1,11 +1,9 @@
 package fr.uds.info901.RumorYAP;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
@@ -45,28 +43,29 @@ public class App
     	//Test d'un reseau et d'une rumeur
     	List<Personne> reseau = App.getInitialGraph();
     	reseau.get(0).setRumor(70);
-    	for (Personne ami : reseau) {
-			ami.spread();
-		}
-    	for (Personne ami : reseau) {
-			System.out.println(ami.getRumor());
-		}
     	
     	//Test graphstream
     	Graph graph = new SingleGraph("Rumor");
     	for (Personne ami : reseau) {
+    		System.out.println(ami.getRumor());
     		graph.addNode(ami.getName());
 		}
 
     	//Afficher le graph
     	graph.display();
+    	
     	//Algo pour créer le graph
-    	for (Personne ami : reseau) {
+		for (Personne ami : reseau) {
     		for (Personne relation : ami.amis)
 			graph.addEdge(ami.getName()+relation.getName(),ami.getName(),relation.getName());
-    		if(ami.getRumor()>10)
-    			graph.getNode(ami.getName()).setAttribute("ui.style", "fill-color: rgb(255,0,0);");
+			graph.getNode(ami.getName()).setAttribute("ui.style", ami.getColorInGraph());
     		//sc.nextLine();
+		}
+		
+		reseau.get(0).spread();
+		
+		for (Personne personne : reseau) {
+			graph.getNode(personne.getName()).setAttribute("ui.style", personne.getColorInGraph());
 		}
     	
     	sc.close();
