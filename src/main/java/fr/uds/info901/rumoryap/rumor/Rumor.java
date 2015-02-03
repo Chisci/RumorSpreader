@@ -1,4 +1,8 @@
-package fr.uds.info901.RumorYAP.rumor;
+package fr.uds.info901.rumoryap.rumor;
+
+import java.util.List;
+
+import fr.uds.info901.rumoryap.SocialLink;
 
 public class Rumor {
 	private AbstractRumorState rumorState;
@@ -18,5 +22,9 @@ public class Rumor {
 
 	public void setCredibility(double credibility) {
 		this.credibility = credibility;
+	}
+	
+	public void spread(List<SocialLink> friendList){
+		this.rumorState.spread(friendList);
 	}
 }
