@@ -3,6 +3,7 @@ package fr.uds.info901.rumoryap;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.uds.info901.rumoryap.rumor.Idle;
 import fr.uds.info901.rumoryap.rumor.Rumor;
 
 public class Personne {
@@ -16,6 +17,8 @@ public class Personne {
 	public Personne(){
 		this.id = ""+NB_PERSONNES++;
 		friendList = new ArrayList<SocialLink>();
+		this.rumor = new Rumor();
+		this.rumor.setRumorState(new Idle());
 	}
 	
 	public void addFriend(Personne friend){
@@ -51,7 +54,7 @@ public class Personne {
 		return this.friendList.contains(personne);
 	}
 	public boolean isInfected(){
-		if(this.getRumor()==null)
+		if(this.getRumor().getRumorState()instanceof Idle)
 			return false;
 		return true;
 	}

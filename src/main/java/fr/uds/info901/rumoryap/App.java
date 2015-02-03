@@ -62,7 +62,7 @@ public class App
     		//sc.nextLine();
 		}
 		
-		reseau.get(0).spread();
+		//reseau.get(0).spread();
 		
 		for (Personne personne : reseau) {
 			graph.getNode(personne.getName()).setAttribute("ui.style", personne.getColorInGraph());
