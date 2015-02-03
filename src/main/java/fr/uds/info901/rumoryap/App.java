@@ -12,7 +12,7 @@ import org.graphstream.graph.implementations.SingleGraph;
  */
 public class App 
 {
-	private static final int NB_PERSONNE = 10;
+	private static final int NB_PERSONNE = 50;
 	
 	private static List<Personne> getInitialGraph(){
 		List<Personne> reseau = new ArrayList<Personne>();
@@ -27,7 +27,7 @@ public class App
 					if(Math.random()<0.5){
 						if(!personne2.isFriendWith(personne)){
 							personne.addFriend(personne2);
-						}
+						}	
 					}
 				}
 			}
@@ -56,10 +56,8 @@ public class App
     	
     	//Algo pour créer le graph
 		for (Personne ami : reseau) {
-    		for (SocialLink socialLink: ami.getFriendList()){
-    			Personne relation = socialLink.getFriend();
-    			graph.addEdge(ami.getName()+relation.getName(),ami.getName(),relation.getName());
-    		}
+    		for (SocialLink socialLink : ami.getFriendList())
+    			graph.addEdge(ami.getName()+socialLink.getFriend().getName(),ami.getName(),socialLink.getFriend().getName());
 			graph.getNode(ami.getName()).setAttribute("ui.style", ami.getColorInGraph());
     		//sc.nextLine();
 		}
@@ -68,6 +66,18 @@ public class App
 		
 		for (Personne personne : reseau) {
 			graph.getNode(personne.getName()).setAttribute("ui.style", personne.getColorInGraph());
+			if(personne.isInfected())
+			{
+				for(SocialLink socialLink : personne.getFriendList())
+				{
+					Personne srab = socialLink.getFriend();
+					if(srab.isInfected())
+					{
+						graph.getEdge(personne.getName()+srab.getName()).setAttribute("ui.style", "fill-color: rgb(255,0,0);");
+					}
+				}
+			}
+			
 		}
     	
     	sc.close();
