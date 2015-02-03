@@ -1,16 +1,37 @@
 package fr.uds.info901.rumoryap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.uds.info901.rumoryap.rumor.AbstractRumorState;
 import fr.uds.info901.rumoryap.rumor.BelieverActivist;
 import fr.uds.info901.rumoryap.rumor.BelieverNonActivist;
 import fr.uds.info901.rumoryap.rumor.Idle;
 import fr.uds.info901.rumoryap.rumor.Rumor;
+import fr.uds.info901.rumoryap.rumor.UnBelieverActivist;
 import fr.uds.info901.rumoryap.rumor.UnBelieverNonActivist;
 
 public class Personne {
+	
+	/**
+	 * Logging appearances frequencies of each behavior
+	 */
+	public static Map<String, Integer> freq = new HashMap<String, Integer>();
+	static{
+		
+		freq.put(BelieverActivist.class.getSimpleName(), 0);
+	
+		freq.put(BelieverNonActivist.class.getSimpleName(), 0);
+	
+		freq.put(Idle.class.getSimpleName(), 0);
+	
+		freq.put(UnBelieverNonActivist.class.getSimpleName(), 0);
+	
+		freq.put(UnBelieverActivist.class.getSimpleName(), 0);
+	
+	}
 	
 	private static int NB_PERSONNES = 1;
 	private long id;
@@ -27,9 +48,6 @@ public class Personne {
 	}
 	
 	public void addFriend(Personne friend){
-		
-		//TODO definir la trustability
-		
 		this.friendList.add(new SocialLink(Math.random(), friend));
 	}
 	
@@ -43,8 +61,11 @@ public class Personne {
 	}
 	public void hearRumor(double trustability){
 		
+		//TODO something clever ?
 		double value = Math.random()*this.rumor.getPropagationRate() * trustability * this.stupidity * this.rumor.getCredibility();
-		//System.out.println(value);
+		
+		freq(value);
+		
 		AbstractRumorState rumorState = new UnBelieverNonActivist();
 		if(value > 0.1){
 			rumorState = new BelieverActivist();
@@ -54,12 +75,10 @@ public class Personne {
 			rumorState = new Idle();
 		}else if(value > 0.0001){
 			rumorState = new UnBelieverNonActivist();
-		}else if(value > 0.00001){
-			rumorState = new BelieverActivist();
+		}else{
+			rumorState = new UnBelieverActivist();
 		}
 		rumor.setRumorState(rumorState);
-		// set new rumorState 
-		
 	}
 	
 	public long getName() {
@@ -95,6 +114,20 @@ public class Personne {
 
 	public void setStupidity(double stupidity) {
 		this.stupidity = stupidity;
+	}
+	
+	public static void freq(double value){
+		if(value > 0.1){
+			freq.put(BelieverActivist.class.getSimpleName(), freq.get(BelieverActivist.class.getSimpleName())+1);
+		}else if(value > 0.01){
+			freq.put(BelieverNonActivist.class.getSimpleName(), freq.get(BelieverNonActivist.class.getSimpleName())+1);
+		}else if(value > 0.001){
+			freq.put(Idle.class.getSimpleName(), freq.get(Idle.class.getSimpleName())+1);
+		}else if(value > 0.0001){
+			freq.put(UnBelieverNonActivist.class.getSimpleName(), freq.get(UnBelieverNonActivist.class.getSimpleName())+1);
+		}else{
+			freq.put(UnBelieverActivist.class.getSimpleName(), freq.get(BelieverActivist.class.getSimpleName())+1);
+		}
 	}
 
 }

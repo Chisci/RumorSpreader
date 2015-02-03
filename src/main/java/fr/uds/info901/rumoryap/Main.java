@@ -104,6 +104,7 @@ public class Main {
 			line = scanner.nextLine();
 		}
 		scanner.close();
+		System.out.println(Personne.freq);
 	}
 }
 
