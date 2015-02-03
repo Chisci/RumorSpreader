@@ -45,16 +45,16 @@ public class Personne {
 		
 		double value = Math.random()*this.rumor.getPropagationRate() * trustability * this.stupidity * this.rumor.getCredibility();
 		//System.out.println(value);
-		AbstractRumorState rumorState = new Idle();
-		if(value < 0.01){
+		AbstractRumorState rumorState = new UnBelieverNonActivist();
+		if(value > 0.1){
 			rumorState = new BelieverActivist();
-		}else if(value < 0.001){
+		}else if(value > 0.01){
 			rumorState = new BelieverNonActivist();
-		}else if(value < 0.0001){
+		}else if(value > 0.001){
 			rumorState = new Idle();
-		}else if(value < 0.00001){
+		}else if(value > 0.0001){
 			rumorState = new UnBelieverNonActivist();
-		}else if(value < 0.000001){
+		}else if(value > 0.00001){
 			rumorState = new BelieverActivist();
 		}
 		rumor.setRumorState(rumorState);
