@@ -66,6 +66,17 @@ public class App
 		
 		for (Personne personne : reseau) {
 			graph.getNode(personne.getName()).setAttribute("ui.style", personne.getColorInGraph());
+			if(personne.isInfected())
+			{
+				for(Personne srab : personne.amis)
+				{
+					if(srab.isInfected())
+					{
+						graph.getEdge(personne.getName()+srab.getName()).setAttribute("ui.style", "fill-color: rgb(255,0,0);");
+					}
+				}
+			}
+			
 		}
     	
     	sc.close();
