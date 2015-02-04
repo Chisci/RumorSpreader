@@ -61,8 +61,13 @@ public class Personne {
 	}
 	public void hearRumor(double trustability){
 		
+		// x percent of propagation rate, so get a random between 0 and 100 and check if it's higher than propagation rate
+		if((Math.random()*100)>this.rumor.getPropagationRate()){
+			return;
+		}
+		
 		//TODO something clever ?
-		double value = Math.random()*this.rumor.getPropagationRate() * trustability * this.stupidity * this.rumor.getCredibility();
+		double value = Math.random() * trustability * this.stupidity * this.rumor.getCredibility();
 		
 		freq(value);
 		

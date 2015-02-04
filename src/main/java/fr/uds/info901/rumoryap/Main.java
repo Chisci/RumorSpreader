@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.math.plot.Plot2DPanel;
 
 import fr.uds.info901.rumoryap.rumor.BelieverActivist;
 
@@ -14,6 +17,7 @@ public class Main {
 	private static final double FRIEND_COEF = 0.5;
 	private static final String SEPARATOR = "<->";
 	private static final String STYLE = "ui.style";
+	private static List<Double> stats = new ArrayList<Double>();
 	
 	private static List<Personne> getInitialGraph(){
 		List<Personne> network = new ArrayList<Personne>();
@@ -71,6 +75,17 @@ public class Main {
 		}
 	}
 	
+	public static double percentageInfected(List<Personne> network){
+		double infectedCount = 0;
+		for(Personne personne : network){
+			if(personne.isInfected()){
+				++infectedCount;
+			}
+		}
+		stats.add(infectedCount/network.size()*100);
+		return infectedCount/network.size()*100;
+	}
+	
 	public static void main(String[] args){
 		List<Personne> network = Main.getInitialGraph();
 		Graph graph = new SingleGraph("Rumor");
@@ -91,20 +106,57 @@ public class Main {
 		
 		network.get(0).getRumor().setRumorState(new BelieverActivist());
 		network.get(0).spread();
-		
+		updateGraph(graph, network);
 		Scanner scanner = new Scanner(System.in);
+		/*
 		String line = scanner.nextLine();
 		while(!line.contains("exit")){
-			
 			for(Personne personne : network){
 				personne.spread();
 			}
 			
 			updateGraph(graph, network);
+			System.out.println(percentageInfected(network));
 			line = scanner.nextLine();
+		}
+		*/
+		for(int i = 0; i<1000; ++i){
+			for(Personne personne : network){
+				personne.spread();
+			}
+			try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			updateGraph(graph, network);
+			percentageInfected(network);
 		}
 		scanner.close();
 		System.out.println(Personne.freq);
+		
+		Plot2DPanel propagation = new Plot2DPanel();
+		JFrame frame;
+		propagation.addLegend("propagation");
+		
+		double[]x = new double[stats.size()];
+		double[]y = new double[stats.size()];
+		
+		for(int i = 0; i<stats.size();++i){
+			x[i]=i;
+			y[i]=stats.get(i);
+		}
+		 
+		propagation.addLinePlot("propagation", x, y);
+
+        frame = new JFrame("graph propagation");
+        frame.setSize(600, 600);
+        frame.setContentPane(propagation);
+        frame.setVisible(true);
+		
+		System.out.println(stats);
+		
 	}
 }
 
