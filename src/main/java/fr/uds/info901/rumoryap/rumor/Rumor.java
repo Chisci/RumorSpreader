@@ -1,16 +1,20 @@
 package fr.uds.info901.rumoryap.rumor;
 
 import java.util.List;
+import java.util.Map;
 
+import fr.uds.info901.rumoryap.PropertyLoader;
 import fr.uds.info901.rumoryap.SocialLink;
 
 public class Rumor {
+	
+	private Map<String, String> properties = PropertyLoader.getMapProperty();
 	private AbstractRumorState rumorState;
-	private double credibility = Math.random();
+	private double credibility = Double.parseDouble(properties.get("RUMOR_CREDIBILITY"))*Math.random();
 	/**
 	 * Daily propagation rate in percentage
 	 */
-	private double propagationRate = Math.random();
+	private double propagationRate = Double.parseDouble(properties.get("PROPAGATION_RATE"))*Math.random();
 
 	public AbstractRumorState getRumorState() {
 		return rumorState;

@@ -16,4 +16,6 @@ public abstract class AbstractRumorState {
 
 	public abstract String getColorInGraph();
 	public abstract void spread(List<SocialLink> friendList);
+	public static String CLASS_NAME;
+	public static int THRESHOLD;
 }

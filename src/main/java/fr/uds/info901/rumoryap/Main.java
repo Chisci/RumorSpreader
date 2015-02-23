@@ -2,6 +2,7 @@ package fr.uds.info901.rumoryap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -13,8 +14,10 @@ import org.math.plot.Plot2DPanel;
 import fr.uds.info901.rumoryap.rumor.BelieverActivist;
 
 public class Main {
-	private static final int NB_PERSONNE = 50;
-	private static final double FRIEND_COEF = 0.5;
+	
+	private static Map<String,String> properties = PropertyLoader.getMapProperty(); 
+	private static final int NB_PERSONNE = Integer.parseInt(properties.get("NB_PERSONNE_IN_NETWORK"));
+	private static final double FRIEND_COEF = Double.parseDouble(properties.get("FRIEND_COEF"));
 	private static final String SEPARATOR = "<->";
 	private static final String STYLE = "ui.style";
 	private static List<Double> stats = new ArrayList<Double>();
@@ -127,7 +130,6 @@ public class Main {
 			try {
 				Thread.sleep(30);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			updateGraph(graph, network);

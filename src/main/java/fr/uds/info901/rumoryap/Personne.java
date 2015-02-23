@@ -33,10 +33,11 @@ public class Personne {
 	
 	}
 	
+	private Map<String, String> properties = PropertyLoader.getMapProperty();
 	private static int NB_PERSONNES = 1;
 	private long id;
 	private Rumor rumor;
-	private double stupidity = 0;
+	private double stupidity = Double.parseDouble(properties.get("GENERAL_TRUSTABILITY"))*Math.random();
 	private ArrayList<SocialLink> friendList;
 	
 	public Personne(){
@@ -48,7 +49,7 @@ public class Personne {
 	}
 	
 	public void addFriend(Personne friend){
-		this.friendList.add(new SocialLink(Math.random(), friend));
+		this.friendList.add(new SocialLink(Double.parseDouble(properties.get("GENERAL_STUPIDITY"))*Math.random(), friend));
 	}
 	
 	public List<SocialLink> getFriendList(){
@@ -67,18 +68,26 @@ public class Personne {
 		}
 		
 		//TODO something clever ?
-		double value = Math.random() * trustability * this.stupidity * this.rumor.getCredibility();
+		/*
+		 * Stupidity increase chance of believing the rumor
+		 * trustability increase chance of believing the rumor or not
+		 * rumor's credibility increase chance of believing the rumor
+		 * Those 3 part are ponderate with a random
+		 * We add those 4 mark which gives us a rate on 4
+		 */
+		double value = Math.random() + (trustability + this.stupidity + this.rumor.getCredibility())/3;
+		value *= 5/2;
 		
 		freq(value);
 		
 		AbstractRumorState rumorState = new UnBelieverNonActivist();
-		if(value > 0.1){
+		if(value > BelieverActivist.THRESHOLD){
 			rumorState = new BelieverActivist();
-		}else if(value > 0.01){
+		}else if(value > BelieverNonActivist.THRESHOLD){
 			rumorState = new BelieverNonActivist();
-		}else if(value > 0.001){
+		}else if(value > Idle.THRESHOLD){
 			rumorState = new Idle();
-		}else if(value > 0.0001){
+		}else if(value > UnBelieverNonActivist.THRESHOLD){
 			rumorState = new UnBelieverNonActivist();
 		}else{
 			rumorState = new UnBelieverActivist();
@@ -122,17 +131,16 @@ public class Personne {
 	}
 	
 	public static void freq(double value){
-		if(value > 0.1){
+		if(value < 4){
 			freq.put(BelieverActivist.class.getSimpleName(), freq.get(BelieverActivist.class.getSimpleName())+1);
-		}else if(value > 0.01){
+		}else if(value < 3){
 			freq.put(BelieverNonActivist.class.getSimpleName(), freq.get(BelieverNonActivist.class.getSimpleName())+1);
-		}else if(value > 0.001){
+		}else if(value < 2){
 			freq.put(Idle.class.getSimpleName(), freq.get(Idle.class.getSimpleName())+1);
-		}else if(value > 0.0001){
+		}else if(value < 1){
 			freq.put(UnBelieverNonActivist.class.getSimpleName(), freq.get(UnBelieverNonActivist.class.getSimpleName())+1);
 		}else{
 			freq.put(UnBelieverActivist.class.getSimpleName(), freq.get(BelieverActivist.class.getSimpleName())+1);
 		}
 	}
-
 }
