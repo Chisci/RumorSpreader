@@ -123,7 +123,7 @@ public class Main {
 			line = scanner.nextLine();
 		}
 		*/
-		for(int i = 0; i<1000; ++i){
+		for(int i = 0; i<Integer.parseInt(properties.get("NB_OF_STEP")); ++i){
 			for(Personne personne : network){
 				personne.spread();
 			}
